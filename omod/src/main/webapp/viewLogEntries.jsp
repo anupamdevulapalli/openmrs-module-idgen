@@ -30,7 +30,11 @@
 			"bInfo": true,
 			"bAutoWidth": true
 		} );
-	} );	
+	} );
+	function sanitizeInput() {
+		document.getElementById("comment").value = escape(document.getElementById("comment").value);
+		document.getElementById("identifier").value = escape(document.getElementById("identifier").value);
+	}	
 </script>
 
 <b class="boxHeader"><spring:message code="idgen.logSearchOptions" /></b>
@@ -48,7 +52,7 @@
 					</select>
 				</td>
 				<th><spring:message code="idgen.identifierContains"/>:</th>
-				<td width="100%"><input type="text" name="identifier" value="${identifier}"/></td>
+				<td width="100%"><input type="text" id="identifier" name="identifier" value="${identifier}"/></td>
 			</tr>
 			<tr>
 				<th><spring:message code="idgen.generatedBetween"/>:</th>
@@ -58,14 +62,14 @@
 					<openmrs:fieldGen type="java.util.Date" formFieldName="toDate" val="${toDate}" />
 				</td>
 				<th><spring:message code="idgen.commentContains"/>:</th>
-				<td width="100%"><input type="text" name="comment" value="${comment}"/></td>
+				<td width="100%"><input type="text" id="comment" name="comment" value="${comment}"/></td>
 			</tr>
 			<tr>
 				<th><spring:message code="idgen.generatedBy"/>:</th>
 				<td><openmrs_tag:userField formFieldName="generatedBy" initialValue="${generatedBy.userId}"/></td>
 				<th></th><td></td>
 			</tr>
-			<tr><td colspan="4"><input type="submit" name="action" value="<spring:message code="general.search"/>"/></td></tr>
+			<tr><td colspan="4"><input type="submit" name="action" onclick="sanitizeInput()" value="<spring:message code="general.search"/>"/></td></tr>
 		</table>
 	</form>
 </div>

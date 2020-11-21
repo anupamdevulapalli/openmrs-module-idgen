@@ -22,6 +22,7 @@ import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
@@ -47,12 +48,12 @@ public class LogEntrySearchHandler implements SearchHandler {
         IdentifierSourceService identifierSourceService = Context.getService(IdentifierSourceService.class);
         UserService service = Context.getUserService();
 
-        String source = context.getRequest().getParameter("source");
-        String fromDate = context.getRequest().getParameter("fromDate");
-        String toDate = context.getRequest().getParameter("toDate");
-        String identifier = context.getRequest().getParameter("identifier");
-        String comment = context.getRequest().getParameter("comment");
-        String generatedBy = context.getRequest().getParameter("generatedBy");
+        String source = sanitizeInput(context.getRequest().getParameter("source"));
+        String fromDate = sanitizeInput(context.getRequest().getParameter("fromDate"));
+        String toDate = sanitizeInput(context.getRequest().getParameter("toDate"));
+        String identifier = sanitizeInput(context.getRequest().getParameter("identifier"));
+        String comment = sanitizeInput(context.getRequest().getParameter("comment"));
+        String generatedBy = sanitizeInput(context.getRequest().getParameter("generatedBy"));
 
         IdentifierSource logSource = source != null ? identifierSourceService.getIdentifierSourceByUuid(source) : null;
         Date dateFrom = fromDate != null ? (Date) ConversionUtil.convert(fromDate, Date.class) : null;
@@ -70,6 +71,11 @@ public class LogEntrySearchHandler implements SearchHandler {
             return new NeedsPaging<LogEntry>(logEntries, context);
         }
     }
+    
+	public String sanitizeInput(String in) {
+ 		return StringEscapeUtils.escapeHtml(in);
+ 	}
+	
     @Override
     public SearchConfig getSearchConfig() {
         return searchConfig;
